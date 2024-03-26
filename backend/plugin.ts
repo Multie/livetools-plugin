@@ -14,16 +14,53 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+import { Logger, Roarr } from "roarr";
+import { JsonObject } from "roarr/src/types";
+import { ILivetoolsServer } from "./server";
 
-export interface ILivetoolsBackendPlugin {
-    get name(): string;
+export class LivetoolsBackendPlugin {
+    get name(): string {
+        return "Plugin";
+    }
 
-    install(): Promise<void>;
-    uninstall(): Promise<void>;
+    logger: Logger<JsonObject>;
 
-    enable(): Promise<void>;
-    disable(): Promise<void>;
+    constructor(public server: ILivetoolsServer) {
+        this.logger = Roarr.child({
+            package: this.name,
+        });
+    }
 
-    setup(): Promise<void>;
-    run(): Promise<void>;
+    install(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            resolve();
+        });
+    }
+    uninstall(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            resolve();
+        });
+    }
+
+    enable(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            resolve();
+        });
+    }
+    disable(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            resolve();
+        });
+    }
+
+    setup(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            resolve();
+        });
+    }
+    run(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            resolve();
+        });
+    }
 }

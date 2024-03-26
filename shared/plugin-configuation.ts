@@ -14,24 +14,11 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-import { Logger } from "roarr";
-import { JsonObject } from "roarr/src/types";
-import { LivetoolsPlugins } from "./plugins";
-import { Sequelize } from "sequelize";
-import { Express } from "express";
-export interface ILivetoolsServerConfig {
-    port: number;
-    runtimePath: string;
-    dataPath: string;
-}
 
-export interface ILivetoolsServer {
+export interface IPluginConfiguation {
+    id: number;
+    pluginName: string;
     name: string;
-    express: Express;
-    config: ILivetoolsServerConfig;
-
-    logger: Logger<JsonObject>;
-
-    plugins: LivetoolsPlugins;
-    sequelize: Sequelize;
+    value: string;
+    type: string;
 }

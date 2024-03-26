@@ -16,22 +16,17 @@
  */
 import { Logger } from "roarr";
 import { JsonObject } from "roarr/src/types";
-import { LivetoolsPlugins } from "./plugins";
-import { Sequelize } from "sequelize";
-import { Express } from "express";
-export interface ILivetoolsServerConfig {
-    port: number;
-    runtimePath: string;
-    dataPath: string;
-}
+import { IPlugin } from "./plugin";
 
-export interface ILivetoolsServer {
-    name: string;
-    express: Express;
-    config: ILivetoolsServerConfig;
-
+export interface ILivetoolsPlugins {
+    get name(): string;
     logger: Logger<JsonObject>;
 
-    plugins: LivetoolsPlugins;
-    sequelize: Sequelize;
+    getAllPlugins(): Promise<Array<IPlugin>>;
+
+    install(name: string): Promise<void>;
+    uninstall(name: string): Promise<void>;
+
+    enable(name: string): Promise<void>;
+    disable(name: string): Promise<void>;
 }
