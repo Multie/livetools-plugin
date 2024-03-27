@@ -26,6 +26,7 @@ import { DataTypes } from "sequelize";
 import { exec } from "child_process"
 import path from "path";
 import fs from "fs";
+import { LivetoolsPlugin } from "./plugin";
 
 export class LivetoolsPlugins implements ILivetoolsPlugins {
   get name(): string {
@@ -33,13 +34,13 @@ export class LivetoolsPlugins implements ILivetoolsPlugins {
   }
   logger: Logger<JsonObject>;
 
-  plugins: Array<IPlugin>;
+  plugins: Array<LivetoolsPlugin>;
 
   constructor(public server: ILivetoolsServer) {
     this.logger = Roarr.child({
       package: this.name, // this will be included in all logs
     });
-    this.plugins = new Array<IPlugin>();
+    this.plugins = new Array<LivetoolsPlugin>();
 
     PluginConfiguationModel.init(
       PluginConfiguationModel.getModelDefinition(),
@@ -64,24 +65,29 @@ export class LivetoolsPlugins implements ILivetoolsPlugins {
           throw err;
         })
 
-        let relative = path.relative(__dirname,this.server.config.runtimePath);
-        relative = relative.replace(/\\/g,"/")
-        this.logger.info({cwd:process.cwd(),dir:__dirname, rel:relative},"cwd")
-
-        let promises = installedPluginNames.map((pluginname) => {
-          return import(`./${relative}/${pluginname}/backend/plugin`);
+        let promises = installedPluginNames.map((pluginName) => {
+          let relative = path.relative(__dirname, path.join(
+            this.server.config.runtimePath, "node_modules", pluginName, "backend", "plugin"));
+          relative = relative.replace(/\\/g, "/")
+          this.logger.info({ cwd: process.cwd(), dir: __dirname, rel: relative }, "cwd")
+          return import(relative);
         });
-
-        let plugins = await Promise.all(promises).catch((err: Error) => {
-          throw new Error("Failed to import plugin:" + err.message);
+        let results = await Promise.allSettled(promises);
+        let loadResults = results.filter((result)=> {
+          return result.status == "fulfilled";
+        }).map((result)=> {
+          return (result as PromiseFulfilledResult<any>).value;
         })
-
+        this.plugins = loadResults.map((module)=> {
+          return (new module["default"](this.server)) as LivetoolsPlugin;
+        });
 
 
 
         this.logger.info("Setup finished");
         resolve();
-      } catch (err) {-
+      } catch (err) {
+        -
         reject(err);
       }
     });
