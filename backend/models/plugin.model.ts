@@ -39,7 +39,7 @@ export class PluginModel extends Model implements IPlugin {
     static getModelDefinition() {
         let definition: ModelAttributes = {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
+                type: DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
             },

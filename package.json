@@ -6,7 +6,7 @@
     "@angular/core": "^15.1.0"
   },
   "dependencies": {
-    "Express": "^3.0.1",
+    "express": "^4.19.2",
     "roarr": "^7.21.1",
     "sequelize": "^6.37.1",
     "tslib": "^2.3.0"

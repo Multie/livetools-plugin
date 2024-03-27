@@ -18,7 +18,7 @@ import { Logger, Roarr } from "roarr";
 import { JsonObject } from "roarr/src/types";
 import { ILivetoolsServer } from "./server";
 
-export class LivetoolsBackendPlugin {
+export class LivetoolsPlugin {
     get name(): string {
         return "Plugin";
     }
@@ -33,6 +33,9 @@ export class LivetoolsBackendPlugin {
 
     install(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+
+
+
             resolve();
         });
     }
